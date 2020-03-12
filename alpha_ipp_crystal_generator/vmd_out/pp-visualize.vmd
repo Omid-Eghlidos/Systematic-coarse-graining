@@ -1,0 +1,43 @@
+package require pbctools
+mol new {Alpha_iPP_3a3b3c.lammpstrj} type {lammpstrj} first 0 last 1000 step 1 waitfor 1
+display projection Orthographic
+display shadows on
+display ambientocclusion on
+display depthcue off
+
+color Display Background white
+axes location Off
+#pbc box -shiftcenterrel {-0.0 -0.0 -0.0} -color gray
+
+# C type selection 
+mol modselect 0 0 type 1 
+mol modcolor  0 0 Type
+mol representation VDW 0.500000 12
+mol material AOShiny
+mol addrep 0
+
+# H type selection
+mol modselect 1 0 type 2
+mol modcolor  1 0 Type
+mol representation VDW 0.500000 12.000000
+mol material AOShiny
+
+#carbon color
+color Type 1 silver
+
+#H color
+color Type 2 white
+
+#C size
+mol modstyle 0 0 VDW 0.5 12
+#H size
+mol modstyle 1 0 VDW 0.3 12
+
+rotate z by 90
+#rotate y by 30
+#rotate x by 90
+
+render Tachyon vmdscene.dat "/usr/local/lib/vmd/tachyon_LINUXAMD64" -aasamples 12 %s -format TARGA -o %s.tga
+
+#render Tachyon vmdscene.dat tachyon -aasamples 24 -fullshade -res 1000 1000 %s -format PNG -o aa-#d.png
+#quit
