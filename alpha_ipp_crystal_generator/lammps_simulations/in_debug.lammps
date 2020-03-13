@@ -1,14 +1,14 @@
 units           real
 atom_style      full
 
-#lj/class2/coul/long 9.5
-pair_style      zero 9.5
-# pair_modify     tail yes
+pair_style	lj/class2/coul/long 9.5
+#pair_style      zero 9.5
+#pair_modify     tail yes
 bond_style      class2          
 angle_style     class2
-#dihedral_style	class2
+dihedral_style	class2
 #improper_style	class2
-#kspace_style    ewald 5.0e-6     
+kspace_style    ewald 5.0e-6     
 neighbor        3.0 bin
 neigh_modify    delay 2 every 1
 special_bonds   lj/coul 0.0 0.0 1.0
@@ -16,21 +16,21 @@ special_bonds   lj/coul 0.0 0.0 1.0
 # Equilibrates initial systems.
 read_data       Alpha_iPP_1a1b2c.data	 
 
-pair_coeff      * *
+#pair_coeff      * *
 
 timestep        1
-thermo_style    custom step temp pe press vol etotal 
+thermo_style    custom step temp density pe press vol etotal 
 thermo          100
 
 dump            1 all custom 100 Alpha_iPP_1a1b2c.lammpstrj id mol type xu yu zu
 
-fix             1 all nve/limit 0.6
-fix             2 all temp/rescale 1 300 300 5 0.8
-velocity 	all create 300.0 498523 
+fix             1 all nve/limit 0.7
+fix         	2 all temp/rescale 1 300 300 5 0.8
+velocity 		all create 300.0 498523 
 run             1000
-unfix		1
-unfix		2
+unfix			 1
+unfix			2
 
-fix		1 all npt temp 300 300 100 aniso 1 1 1000
-run		10000
+fix				1 all npt temp 300 300 100 aniso 1 1 1000
+run				10000
 

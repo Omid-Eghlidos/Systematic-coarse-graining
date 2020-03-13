@@ -3,10 +3,9 @@
 import numpy
 
 # Dteremine the angle between atoms
-def angles(CC_bonds, CH_bonds):
-    #print(CC_bonds)
-    #print(CH_bonds)
+def angles(CC_bonds, CH_bonds):   
     total_angles = []
+    # determine the bonds between carbons with  two other bonded carbons 
     for i,b in enumerate(CC_bonds):
         atomsC = [int(a) for a in b if a != -11]
         if len(atomsC) < 2:
@@ -18,63 +17,101 @@ def angles(CC_bonds, CH_bonds):
             total_angles.append(numpy.array([atomsC[0], i, atomsC[2], 1]))
             total_angles.append(numpy.array([atomsC[1], i, atomsC[2], 1]))
 
-
+    # determine the bonds between two bonded carbons and a hydrogens
     for k,l in enumerate(CC_bonds):
         atomsC = [int(e) for e in l if e != -11]
         for m,n in enumerate(CH_bonds):
             atomsH = [int(f) for f in n if f != -11]
+            # checking for different number of carbon bondings 
             if len(atomsC) < 2:
                 if k == m:
                     if len(atomsH) < 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k, 
+                                                         atomsH[0]-1, 2]))
                     elif len(atomsH) == 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))
                     else:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[2]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[2]-1, 2]))
             if len(atomsC) == 2:
                 if k == m:                     
                     if len(atomsH) < 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
                     elif len(atomsH) == 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[1]-1, 2]))
                     else:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))             
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[2]-1, 2]))     
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[2]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))             
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[2]-1, 2]))     
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[2]-1, 2]))
             if len(atomsC) > 2:
                 if k == m:                    
                     if len(atomsH) < 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
                     elif len(atomsH) == 2:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
                     else:
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[1]-1, 2]))             
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[1]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[0], k, atomsH[2]-1, 2]))     
-                        total_angles.append(numpy.array([atomsC[1], k, atomsH[2]-1, 2]))
-                        total_angles.append(numpy.array([atomsC[2], k, atomsH[0]-1, 2]))
-    
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[1]-1, 2]))             
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[1]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[0], k,
+                                                         atomsH[2]-1, 2]))     
+                        total_angles.append(numpy.array([atomsC[1], k,
+                                                         atomsH[2]-1, 2]))
+                        total_angles.append(numpy.array([atomsC[2], k,
+                                                         atomsH[0]-1, 2]))
+
+    # determine the bonds between a carbon bonded to two  hydrogens
     for j,d in enumerate(CH_bonds):
         atoms = [int(c) for c in d if c != -11]
         if len(atoms) < 2:

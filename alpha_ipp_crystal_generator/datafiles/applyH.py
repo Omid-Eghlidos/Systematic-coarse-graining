@@ -4,7 +4,7 @@ import numpy
 import math
 
 def sign(x):
-    ''' a function to change the sign of coordinates when needed '''
+    ''' a function to change the sign '''
     if x < 0:
         a = -1
     elif x > 0:
@@ -17,7 +17,8 @@ def unit_vector(v):
 
 def apply_hydrogens(C,i):
     ''' Construction of hydrogens from Theodorou (MD of aPP Melts) with
-    l_H=0.11 nm and theta_H=1.28 rad and c=+1 for iPP '''
+    l_H=0.11 nm and theta_H=1.28 rad and c=+1 for iPP - all the following
+    formulas are taken from this paper '''
 
     temp = numpy.zeros(3)
     H = numpy.zeros([18,3])
@@ -34,7 +35,8 @@ def apply_hydrogens(C,i):
         ''' r_Hi = r_Ci+c*l_H*[((r_Ri)-(r_Ci-1))cross((r_Ri)-(r_Ci+1))/
                    |((r_Ri)-(r_Ci-1))cross((r_Ri)-(r_Ci+1))|]'''
 
-        # deducting along the unit cell c axis and transform it into orthonormal coordinates
+        # deducting along the unit cell c axis and transform it 
+        # into orthonormal coordinates
         temp[0] = C[8,0]+1.07
         temp[1] = C[8,1]
         temp[2] = C[8,2]-6.41
@@ -93,7 +95,9 @@ def apply_hydrogens(C,i):
 
     # Methyl Group Hydrogens
     def __methyl__():
-        ''' Adding methyl hydrogens to the C3 '''
+        ''' Adding methyl hydrogens to the C3 - these hydrone coordinates 
+            are derived based on geometric calculation with respect to the 
+            carbon ther are connectde to in 3D space'''
         for i in range(0,9,3):
             H[9+i,0] = C[i,0] + sign(C[1+i,0])*1.037
             H[9+i,1] = C[i,1] + 0.0

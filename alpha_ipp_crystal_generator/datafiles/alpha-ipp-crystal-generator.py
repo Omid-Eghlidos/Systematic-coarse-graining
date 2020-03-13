@@ -13,10 +13,14 @@ import dihedrals as dihed
 ''' Input the size of the system in fractional coordinates '''
 a = 1
 b = 1
-c = 1 
+c = 2 
 
 # Turn on(key = 1) and off (key = 0) plotting the figures
 key = 0
+
+# Turn on (qkey = 1) to use real charges for the system and off (qkey = 0) 
+# to ingonre the charges and uses a neutral system
+qkey = 0
 
 ''' output filename '''
 crystallinity = 'Alpha'
@@ -56,10 +60,11 @@ def apply_space_group(C1):
     
     return C1, C2, C3, C4
 
-''' Angle between c vector and x-axis. '''
+''' Angle between c-axis in fractional coordinates 
+    with a-axis. '''
 beta = 99.5 * numpy.pi / 180.0
 
-''' Columns of unit_cell are the a, b, and c cell vectors. '''
+''' Columns of unit_cell are the fractional coordinate (a, b, and c) '''
 unit_cell = numpy.array([[6.63,  0.00, 6.50*numpy.cos(beta)],
                          [0.00, 20.78, 0.0],
                          [0.00,  0.00, 6.50*numpy.sin(beta)]])
@@ -70,7 +75,7 @@ C = numpy.vstack([numpy.dot(C, unit_cell) for C in apply_space_group(C1)])
 atom_types_dict = {'c1': -4, 'c2': -1, 'c3': -2, 'h': -3} 
 
 def sign(x):
-    ''' function to change the sign of coordinates '''
+    ''' function to change the sign '''
     if x < 0:
         a = -1
     elif x > 0:
@@ -78,9 +83,11 @@ def sign(x):
     return a
 
 def unit_vector(v):
-    ''' creating a unit normal vector of vector v'''
+    ''' creating a unit normal vector '''
     return v / numpy.linalg.norm(v)
 
+########################## Creating the system ##############################
+# creating array of hydrogen coordinates 
 H = numpy.zeros([72,3])
 for i in range(4):
     H[18*i:18*(i+1),:] = applyH.apply_hydrogens(C[9*i:9*(i+1),:],i)
@@ -89,11 +96,15 @@ if key == 1:
     plt.plot_unit_cell(C,H)
 
 def crystal(a,b,c):
-    ''' Creating the initial crystalline system - a & b & c are the dimensions of the system '''    
+    ''' Creating the initial crystalline system - 
+	a & b & c are the dimensions of the system '''    
+    # defining arrays to stroe the coordinates of 
+    # crabons and hydrogens of the crystalline system 
     C = numpy.vstack([C for C in apply_space_group(C1)])    
     Carbons = numpy.zeros([a*b*c*36,3])    
     Hydrogens = numpy.zeros([a*b*c*72,3])
-                
+    
+    # calculating the coordinates of the carbons
     for i in range(a):
         Carbons[(36*i):(36*(i+1)),0] = C[:,0] + float(i)
         Carbons[(36*i):(36*(i+1)),1] = C[:,1]
@@ -111,9 +122,11 @@ def crystal(a,b,c):
     
     Carbons = numpy.dot(Carbons, unit_cell) 
     
+    # calculating the number coordinates of hydrogens 
     # number of chains = a*b*c*4
     for i in range(a*b*c*4):        
-        Hydrogens[18*i:18*(i+1),:] = applyH.apply_hydrogens(Carbons[9*i:9*(i+1),:],i)            
+        Hydrogens[18*i:18*(i+1),:] = applyH.apply_hydrogens(Carbons[
+                                                            9*i:9*(i+1),:],i)            
         
     return Carbons, Hydrogens
 
@@ -122,7 +135,7 @@ C, H = crystal(a,b,c)
 if key == 1:
     plt.plot_crystal(C, H)
 
-# Determine bonds
+# Determine bonds between atoms
 CC_bonds = bonds.carbon_bonds(C)
 CH_bonds = bonds.hydrogen_bonds(C,H)
 bonds = numpy.append(CC_bonds,CH_bonds, axis = 0)
@@ -139,5 +152,6 @@ proper_dihedrals = dihed.proper_dihedral(CC_bonds, CH_bonds)
 improper_dihedrals = dihed.improper_dihedral(CC_bonds, CH_bonds)
 
 
-out.outputfile(filename,unit_cell,C,H,CC_bonds,CH_bonds,atom_types_dict,total_angles,proper_dihedrals,improper_dihedrals,a,b,c)
+out.outputfile(filename,unit_cell,C,H,CC_bonds,CH_bonds,atom_types_dict,
+	       total_angles,proper_dihedrals,improper_dihedrals,a,b,c, qkey)
 
