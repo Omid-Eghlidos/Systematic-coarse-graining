@@ -10,23 +10,29 @@ import bonds
 import angles as ang
 import dihedrals as dihed
 
-''' Input the size of the system in fractional coordinates '''
+############################## Initialization ################################
+# Input the size of the system in fractional coordinates 
 a = 1
 b = 1
-c = 2 
+c = 1 
 
-# Turn on(key = 1) and off (key = 0) plotting the figures
-key = 0
+# Turn on(plotkey = 1) and off (plotkey = 0) plotting the figures
+plotkey = 1
 
 # Turn on (qkey = 1) to use real charges for the system and off (qkey = 0) 
 # to ingonre the charges and uses a neutral system
 qkey = 0
 
-''' output filename '''
+# Turn on (outkey = 1) to make the outputfile or turn off (outkey = 0) 
+# to make output file
+outkey = 1 
+
+# defining output file name
 crystallinity = 'Alpha'
 filename = crystallinity+'_iPP_'+str(a)+'a'+str(b)+'b'+str(c)+'c'
 filename = filename + '.data'
 
+######################## Creating the alpha iPP chian #########################
 # Creating the backbone carbons in a unit cell
 ''' Atomic fractional coordiantes x/a, y/b, and z/c
 from (1988 Macromolecules Immiczi and Iannelil) 
@@ -46,30 +52,28 @@ def apply_space_group(C1):
     ''' Adding chains in a unitcell using symmetry operations '''
     C2, C3, C4 = C1.copy(), C1.copy(), C1.copy()
 
-    C2[:,0] =  C2[:,0]
-    C2[:,1] = -C2[:,1]
-    C2[:,2] =  C2[:,2] - 0.5
+    C2[:,0] =  C1[:,0]
+    C2[:,1] = -C1[:,1]
+    C2[:,2] =  C1[:,2] + 0.5
 
-    C3[:,0] =  C3[:,0] - 0.5
-    C3[:,1] =  C3[:,1] - 0.5
-    C3[:,2] =  C3[:,2] 
+    C3[:,0] =  C2[:,0] - 0.5 
+    C3[:,1] =  C2[:,1] + 0.5
+    C3[:,2] =  C2[:,2] 
 
-    C4[:,0] =  C3[:,0] 
-    C4[:,1] = -C3[:,1] 
-    C4[:,2] =  C2[:,2]    
+    C4[:,0] =  C1[:,0] - 0.5  
+    C4[:,1] =  C1[:,1] - 0.5 
+    C4[:,2] =  C1[:,2]     
     
     return C1, C2, C3, C4
 
 ''' Angle between c-axis in fractional coordinates 
     with a-axis. '''
-beta = 99.5 * numpy.pi / 180.0
+beta = 0 * numpy.pi / 180.0
 
 ''' Columns of unit_cell are the fractional coordinate (a, b, and c) '''
 unit_cell = numpy.array([[6.63,  0.00, 6.50*numpy.cos(beta)],
                          [0.00, 20.78, 0.0],
                          [0.00,  0.00, 6.50*numpy.sin(beta)]])
-
-C = numpy.vstack([numpy.dot(C, unit_cell) for C in apply_space_group(C1)])
 
 ''' Creating a dictionary for existing atoms '''
 atom_types_dict = {'c1': -4, 'c2': -1, 'c3': -2, 'h': -3} 
@@ -86,13 +90,15 @@ def unit_vector(v):
     ''' creating a unit normal vector '''
     return v / numpy.linalg.norm(v)
 
-########################## Creating the system ##############################
-# creating array of hydrogen coordinates 
+############################ Creating the system ##############################
+# creating an array of carbon coordinates 
+C = numpy.vstack([numpy.dot(C, unit_cell) for C in apply_space_group(C1)])
+# creating an array of hydrogen coordinates 
 H = numpy.zeros([72,3])
 for i in range(4):
     H[18*i:18*(i+1),:] = applyH.apply_hydrogens(C[9*i:9*(i+1),:],i)
 
-if key == 1:
+if plotkey == 1:
     plt.plot_unit_cell(C,H)
 
 def crystal(a,b,c):
@@ -132,9 +138,10 @@ def crystal(a,b,c):
 
 C, H = crystal(a,b,c)
 
-if key == 1:
+if plotkey == 1:
     plt.plot_crystal(C, H)
 
+##################### Calculating the system's properties #####################
 # Determine bonds between atoms
 CC_bonds = bonds.carbon_bonds(C)
 CH_bonds = bonds.hydrogen_bonds(C,H)
@@ -143,7 +150,6 @@ bonds = numpy.append(CC_bonds,CH_bonds, axis = 0)
 # Determine the angle between atoms
 total_angles = ang.angles(CC_bonds, CH_bonds)
 
-
 # Determine the dihedral angles in the molecule
 # Proper dihedrdal angle
 proper_dihedrals = dihed.proper_dihedral(CC_bonds, CH_bonds)
@@ -151,7 +157,8 @@ proper_dihedrals = dihed.proper_dihedral(CC_bonds, CH_bonds)
 # Improper dihedral angle
 improper_dihedrals = dihed.improper_dihedral(CC_bonds, CH_bonds)
 
-
-out.outputfile(filename,unit_cell,C,H,CC_bonds,CH_bonds,atom_types_dict,
+############################# create the output ############################### 
+if outkey == 1:
+    out.outputfile(filename,unit_cell,C,H,CC_bonds,CH_bonds,atom_types_dict,
 	       total_angles,proper_dihedrals,improper_dihedrals,a,b,c, qkey)
 

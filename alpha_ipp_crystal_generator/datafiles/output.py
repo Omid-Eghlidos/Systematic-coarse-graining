@@ -171,26 +171,26 @@ def outputfile(filename,unit_cell,C,H,CC_bonds,CH_bonds,atom_types_dict,
                 if i >= C_counter*9 and i < (C_counter+1)*9:
                     mol_tag[i] = C_counter+1
                     f.write(str(int(i+1))+' '+str(int(mol_tag[i]))+' '+str(atom_type)+' '+
-                            str(__charge__(i))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+' '+
+                            str(__charge__(i,qkey))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+' '+
                             str(atoms[i,2])+'\n')
                 else:                    
                     C_counter = C_counter+1
                     mol_tag[i] = C_counter+1
                     f.write(str(int(i+1))+' '+str(int(mol_tag[i]))+' '+str(atom_type)+' '+
-                            str(__charge__(i))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+' '+
+                            str(__charge__(i,qkey))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+' '+
                             str(atoms[i,2])+'\n')
             elif i >= len(C):
                 atom_type = 2
                 if i >= (H_counter*18+len(C)) and i < ((H_counter+1)*18+len(C)):
                     mol_tag[i] = H_counter+1
                     f.write(str(int(i+1))+' '+str(int(mol_tag[i]))+' '+str(atom_type)+' '+
-                            str(__charge__(i))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+
+                            str(__charge__(i,qkey))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+
                             ' '+str(atoms[i,2])+'\n')
                 else:
                     H_counter = H_counter+1
                     mol_tag[i] = H_counter+1
                     f.write(str(int(i+1))+' '+str(int(mol_tag[i]))+' '+str(atom_type)+' '+
-                            str(__charge__(i))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+
+                            str(__charge__(i,qkey))+' '+str(atoms[i,0])+' '+str(atoms[i,1])+
                             ' '+str(atoms[i,2])+'\n')
                     
     def __velocities__():
